@@ -1,0 +1,57 @@
+log:
+  level: warn
+
+db:
+  type: postgresdb
+
+externalPostgresql: {}
+
+externalRedis: {}
+
+# -----------------------------
+# CORE N8N CONFIG
+# -----------------------------
+extraEnvVars:
+  N8N_HOST: n8n.cantalay.com
+  N8N_PROTOCOL: https
+  N8N_EDITOR_BASE_URL: https://n8n.cantalay.com
+  N8N_WEBHOOK_URL: https://webhook.cantalay.com
+  N8N_SECURE_COOKIE: "true"
+
+# -----------------------------
+# MAIN
+# -----------------------------
+main:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 512m
+      memory: 512Mi
+
+# -----------------------------
+# WORKER (QUEUE)
+# -----------------------------
+worker:
+  mode: queue
+  autoscaling:
+    enabled: true
+  waitMainNodeReady:
+    enabled: true
+
+# -----------------------------
+# WEBHOOK (QUEUE)
+# -----------------------------
+webhook:
+  mode: queue
+  autoscaling:
+    enabled: true
+  waitMainNodeReady:
+    enabled: true
+
+# -----------------------------
+# INGRESS (CRD KULLANIYORUZ)
+# -----------------------------
+ingress:
+  enabled: false

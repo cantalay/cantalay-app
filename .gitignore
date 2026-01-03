@@ -1,0 +1,94 @@
+# -----------------------------
+# Terraform
+# -----------------------------
+.tfstate
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+*.tfplan
+
+# Terraform crash logs
+crash.log
+
+# Local Terraform data
+.terraform/
+.terraform.lock.hcl
+
+# Terraform override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+
+# -----------------------------
+# Kubernetes
+# -----------------------------
+kubeconfig
+kubeconfig.yaml
+kube-config
+*.kubeconfig
+
+
+# -----------------------------
+# SSH keys (DO NOT COMMIT)
+# -----------------------------
+*.pem
+*.key
+id_rsa
+id_rsa.pub
+ssh_host_*
+
+
+# -----------------------------
+# Vault
+# -----------------------------
+vault-token
+.vault-token
+*.hcl
+auto-unseal.json
+
+
+# -----------------------------
+# Helm
+# -----------------------------
+charts/
+*.tgz
+
+
+# -----------------------------
+# Logs / Temp
+# -----------------------------
+*.log
+logs/
+tmp/
+temp/
+.cache/
+*.swp
+.DS_Store
+
+
+# -----------------------------
+# Sensitive YAML/ENV files
+# -----------------------------
+.env
+*.env
+*.secret.yaml
+*.values.secret.yaml
+
+
+# -----------------------------
+# IDE / IntelliJ IDEA
+# -----------------------------
+.idea/
+*.iml
+out/
+workspace.xml
+
+
+# -----------------------------
+# Python virtual env (if scripts)
+# -----------------------------
+venv/
+__pycache__/

@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: todogi-backend-cert
+  namespace: todogi-backend
+spec:
+  secretName: todogi-backend-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - api.singlestranger.com
+    - www.api.singlestranger.com

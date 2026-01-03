@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: auth-gateway-cert
+  namespace: gateway
+spec:
+  secretName: auth-gateway-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - auth.cantalay.com
+    - www.auth.cantalay.com

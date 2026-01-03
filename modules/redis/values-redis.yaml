@@ -1,0 +1,29 @@
+architecture: standalone
+
+auth:
+  enabled: true
+  password: ""   # Vault → Terraform ile set edilecek
+
+master:
+  persistence:
+    enabled: true
+    storageClass: local-path
+    size: 5Gi
+
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+replica:
+  replicaCount: 0
+
+metrics:
+  enabled: false
+
+service:
+  ports:
+    redis: 6379

@@ -1,0 +1,58 @@
+replicaCount: 1
+
+envFrom:
+  - secretRef:
+      name: auth-gateway-secrets
+
+image:
+  repository: ghcr.io/cantalay/auth-gateway
+  tag: "0.0.4"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8080
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 1
+    memory: 1Gi
+
+
+env:
+  # -----------------------
+  # App
+  # -----------------------
+  - name: SPRING_PROFILES_ACTIVE
+    value: prod
+
+  - name: SERVER_PORT
+    value: "8080"
+
+  # -----------------------
+  # OpenTelemetry (OTLP gRPC)
+  # -----------------------
+  - name: OTEL_EXPORTER_OTLP_ENDPOINT
+    value: "http://otel-collector-opentelemetry-collector.otel-collector.svc.cluster.local:4317"
+
+  - name: OTEL_EXPORTER_OTLP_PROTOCOL
+    value: "grpc"
+
+  - name: OTEL_SERVICE_NAME
+    value: "todogi-auth-gateway"
+
+ingress:
+  enabled: true
+  className: traefik
+  hosts:
+    - host: auth.cantalay.com
+      paths:
+        - path: /
+          pathType: Prefix
+    - host: www.auth.cantalay.com
+      paths:
+        - path: /
+          pathType: Prefix

@@ -1,0 +1,16 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: todogi-backend
+  namespace: todogi-backend
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`api.singlestranger.com`) || Host(`www.api.singlestranger.com`)
+      kind: Rule
+      services:
+        - name: todogi-backend
+          port: 8080
+  tls:
+    secretName: todogi-backend-tls

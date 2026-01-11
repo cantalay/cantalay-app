@@ -6,7 +6,7 @@ envFrom:
 
 image:
   repository: ghcr.io/cantalay/auth-gateway
-  tag: "0.0.4"
+  tag: "0.0.6"
   pullPolicy: IfNotPresent
 
 service:

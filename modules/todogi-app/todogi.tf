@@ -4,11 +4,6 @@ resource "kubernetes_namespace" "todogi_app" {
   }
 }
 
-data "vault_kv_secret_v2" "auth_gateway" {
-  mount = "kv"
-  name  = "todogi"
-}
-
 resource "helm_release" "todogi_app" {
   name      = "todogi"
   namespace = kubernetes_namespace.todogi_app.metadata[0].name
@@ -22,7 +17,6 @@ resource "helm_release" "todogi_app" {
   ]
 
 }
-
 
 resource "null_resource" "todogi_cert" {
   depends_on = [

@@ -66,13 +66,17 @@ resource "helm_release" "n8n" {
       name  = "externalPostgresql.database"
       value = data.vault_kv_secret_v2.n8n.data["POSTGRES_DB"]
     },
+      {
+        name  = "extraEnvVars.DB_POSTGRESDB_SCHEMA"
+        value = "n8n_backend"
+      },
 
     # ===============================
     # REDIS (SECRET)
     # ===============================
     {
       name  = "externalRedis.host"
-      value = data.vault_kv_secret_v2.n8n.data["REDIS_HOST"]
+      value = data.vault_kv_secret_v2.redis.data["REDIS_HOST"]
     },
     {
       name  = "externalRedis.username"

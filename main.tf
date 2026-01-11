@@ -52,37 +52,42 @@ provider "vault" {
   token   = ""
 }
 
-module "redis" {
-  source = "./modules/redis"
-
-  depends_on = [
-    null_resource.get_kubeconfig,
-  ]
-}
-module "n8n" {
-  source = "./modules/n8n"
-
-  depends_on = [
-    null_resource.get_kubeconfig,
-    module.redis,
-  ]
-}
+# module "n8n" {
+#   source = "./modules/n8n"
+#
+#   depends_on = [
+#     null_resource.get_kubeconfig,
+# #     module.redis, need redis look cantalay base
+#   ]
+# }
 
 module "gateway" {
   source = "./modules/auth-gateway"
   depends_on = [
-    null_resource.get_kubeconfig,
+    module.keycloak
   ]
 }
 module "todogi_app" {
   source = "./modules/todogi-app"
     depends_on = [
-        null_resource.get_kubeconfig,
-        module.gateway,
+        module.gateway
     ]
 }
 module "todogi_backend" {
   source = "./modules/todogi-backend"
+  depends_on = [
+    module.keycloak
+  ]
+}
+
+module "keycloak" {
+  source = "./modules/keycloak"
+
+  providers = {
+    helm       = helm
+    kubernetes = kubernetes
+  }
+
   depends_on = [
     null_resource.get_kubeconfig,
   ]

@@ -1,0 +1,142 @@
+# ------------------------------------------------------------------------------
+# BASIC
+# ------------------------------------------------------------------------------
+replicas: 1
+
+image:
+  repository: quay.io/keycloak/keycloak
+  tag: "26.4.5"
+  pullPolicy: IfNotPresent
+
+serviceMonitor:
+  enabled: true
+# ------------------------------------------------------------------------------
+# SECURITY CONTEXT (prod safe defaults)
+# ------------------------------------------------------------------------------
+podSecurityContext:
+  fsGroup: 1000
+
+securityContext:
+  runAsUser: 1000
+  runAsNonRoot: true
+
+# ------------------------------------------------------------------------------
+# DATABASE (external PostgreSQL)
+# ------------------------------------------------------------------------------
+postgresql:
+  enabled: false
+
+# ------------------------------------------------------------------------------
+# KEYCLOAK CONFIGURATION (OFFICIAL WAY – PROD)
+# ------------------------------------------------------------------------------
+extraEnv: |
+  # --- Proxy / Hostname (V2 Configuration) ---
+  - name: KC_PROXY_HEADERS
+    value: "xforwarded"
+
+  - name: KC_HOSTNAME
+    value: "keycloak.cantalay.com"
+
+  - name: KC_HOSTNAME_STRICT
+    value: "false"
+
+  - name: KC_HTTP_ENABLED
+    value: "true"
+
+  # --- Observability ---
+  - name: KC_METRICS_ENABLED
+    value: "true"
+
+  - name: KC_HEALTH_ENABLED
+    value: "true"
+
+  # --- Database ---
+  - name: KC_DB
+    valueFrom:
+      secretKeyRef:
+        name: keycloak-secrets
+        key: KC_DB_NAME
+
+  - name: KC_DB_URL
+    valueFrom:
+      secretKeyRef:
+        name: keycloak-secrets
+        key: KC_DB_URL
+
+  - name: KC_DB_USERNAME
+    valueFrom:
+      secretKeyRef:
+        name: keycloak-secrets
+        key: KC_DB_USERNAME
+
+
+  - name: KC_DB_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: keycloak-secrets
+        key: KC_DB_PASSWORD
+
+  # --- Bootstrap Admin ---
+  - name: KC_BOOTSTRAP_ADMIN_USERNAME
+    valueFrom:
+      secretKeyRef:
+        name: keycloak-secrets
+        key: KEYCLOAK_ADMIN_USER
+
+  - name: KC_BOOTSTRAP_ADMIN_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: keycloak-secrets
+        key: KEYCLOAK_ADMIN_PASSWORD
+# ------------------------------------------------------------------------------
+# SERVICE
+# ------------------------------------------------------------------------------
+service:
+  type: ClusterIP
+  httpPort: 80
+  httpsPort: 8443
+
+# ------------------------------------------------------------------------------
+# INGRESS
+# (DISABLED – Traefik IngressRoute dışarıdan yönetiliyor)
+# ------------------------------------------------------------------------------
+ingress:
+  enabled: false
+
+# ------------------------------------------------------------------------------
+# PROXY (Traefik uyumlu)
+# ------------------------------------------------------------------------------
+proxy:
+  enabled: true
+  mode: forwarded
+  http:
+    enabled: true
+
+# ------------------------------------------------------------------------------
+# HEALTH & METRICS
+# ------------------------------------------------------------------------------
+metrics:
+  enabled: true
+
+health:
+  enabled: true
+
+# ------------------------------------------------------------------------------
+# HTTP
+# ------------------------------------------------------------------------------
+http:
+  internalPort: http-internal
+  internalScheme: HTTP
+
+# ------------------------------------------------------------------------------
+# AUTOSCALING (kapalı – stateful + single replica)
+# ------------------------------------------------------------------------------
+autoscaling:
+  enabled: false
+
+command:
+  - "/opt/keycloak/bin/kc.sh"
+
+args:
+  - "start"
+

@@ -5,7 +5,7 @@ resource "kubernetes_namespace" "auth_gateway" {
 }
 data "vault_kv_secret_v2" "auth_gateway" {
   mount = "kv"
-  name  = "todogi"
+  name  = "keycloak/todogi"
 }
 resource "helm_release" "auth_gateway" {
   name       = "auth-gateway"
@@ -13,7 +13,7 @@ resource "helm_release" "auth_gateway" {
 
   repository = "https://cantalay.github.io/helm-charts"
   chart      = "spring-boot-app"
-  version    = "0.1.0"
+  version    = "0.1.3"
 
   depends_on = [
     kubernetes_secret.auth_gateway

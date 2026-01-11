@@ -7,8 +7,9 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`auth.cantalay.com`) || Host(`www.auth.cantalay.com`)
+    - match: (Host(`auth.cantalay.com`) || Host(`www.auth.cantalay.com`)) && PathPrefix(`/auth`)
       kind: Rule
+      priority: 50
       services:
         - name: auth-gateway
           port: 8080

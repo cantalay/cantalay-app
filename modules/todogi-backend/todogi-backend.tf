@@ -1,19 +1,19 @@
 resource "kubernetes_namespace" "todogi_backend" {
   metadata {
-    name = "todogi-backend"
+    name = "todogi-be"
   }
 }
 data "vault_kv_secret_v2" "todogi_backend" {
   mount = "kv"
-  name  = "todogi_backend"
+  name  = "todogi/backend"
 }
 resource "helm_release" "todogi_backend" {
-  name      = "todogi-backend"
+  name      = "todogi-be"
   namespace = kubernetes_namespace.todogi_backend.metadata[0].name
 
   repository = "https://cantalay.github.io/helm-charts"
   chart      = "spring-boot-app"
-  version    = "0.1.0"
+  version    = "0.1.3"
 
   depends_on = [
     kubernetes_secret.todogi_backend

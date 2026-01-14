@@ -60,7 +60,13 @@ provider "vault" {
 # #     module.redis, need redis look cantalay base
 #   ]
 # }
-
+terraform {
+  backend "kubernetes" {
+    namespace        = "terraform-states" # State'in saklanacağı yer
+    secret_suffix    = "app-state"      # Secret adının sonuna eklenir
+    config_path   = "/home/cant/.kube/config"
+  }
+}
 module "gateway" {
   source = "./modules/auth-gateway"
   depends_on = [
